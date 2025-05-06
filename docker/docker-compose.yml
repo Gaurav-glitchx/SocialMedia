@@ -1,0 +1,141 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+    ports:
+      - "5434:5432" 
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres -h localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  mongodb:
+    image: mongo:6
+    restart: always
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  admin:
+    build:
+      context: ..
+      dockerfile: docker/services/admin-service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      DB_CONNECTION: mongodb://mongodb:27017/social_media
+    networks:
+      - app-network
+
+  auth:
+    build:
+      context: ..
+      dockerfile: docker/services/auth-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+    environment:
+      DB_CONNECTION: mongodb://mongodb:27017/social_media
+    networks:
+      - app-network
+
+  chat:
+    build:
+      context: ..
+      dockerfile: docker/services/chat-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+    environment:
+      DB_CONNECTION: mongodb://mongodb:27017/social_media
+    networks:
+      - app-network
+
+  media:
+    build:
+      context: ..
+      dockerfile: docker/services/media-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      - mongodb
+    environment:
+      DB_CONNECTION: mongodb://mongodb:27017/social_media
+    networks:
+      - app-network
+
+  notification:
+    build:
+      context: ..
+      dockerfile: docker/services/notification-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      - mongodb
+    environment:
+      DB_CONNECTION: mongodb://mongodb:27017/social_media
+    networks:
+      - app-network
+
+  post:
+    build:
+      context: ..
+      dockerfile: docker/services/post-service
+    ports:
+      - "3005:3005"
+    depends_on:
+      - mongodb
+    environment:
+      DB_CONNECTION: mongodb://mongodb:27017/social_media
+    networks:
+      - app-network
+
+  user:
+    build:
+      context: ..
+      dockerfile: docker/services/user-service
+    ports:
+      - "3006:3006"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+  mongodata:
+
+networks:
+  app-network:
+    driver: bridge
