@@ -37,6 +37,15 @@
         "tsConfigPath": "apps/chat/tsconfig.app.json"
       }
     },
+    "interaction": {
+      "type": "application",
+      "root": "apps/interaction",
+      "entryFile": "main",
+      "sourceRoot": "apps/interaction/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/interaction/tsconfig.app.json"
+      }
+    },
     "media": {
       "type": "application",
       "root": "apps/media",
