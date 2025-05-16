@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package user;
+
+service UserService {
+  // User CRUD operations
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteResponse);
+  rpc SearchUsers (SearchUsersRequest) returns (SearchUsersResponse);
+  
+  // Social features
+  rpc FollowUser (FollowRequest) returns (FollowResponse);
+  rpc UnfollowUser (UnfollowRequest) returns (UserResponse);
+  rpc GetFollowers (GetFollowersRequest) returns (UserListResponse);
+  rpc GetFollowing (GetFollowingRequest) returns (UserListResponse);
+  
+  // Blocking system
+  rpc BlockUser (BlockUserRequest) returns (UserResponse);
+  rpc UnblockUser (UnblockRequest) returns (UserResponse);
+}
+
+// Request/Response messages
+message CreateUserRequest {
+  string email = 1;
+  string username = 2;
+  string fullName = 3;
+  string password = 4;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  optional string email = 2;
+  optional string username = 3;
+  optional string fullName = 4;
+  optional string password = 5;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message SearchUsersRequest {
+  string query = 1;
+  int32 page = 2;
+}
+
+message FollowRequest {
+  string userId = 1;  // The user who wants to follow
+  string targetId = 2; // The user to be followed
+}
+
+message UnfollowRequest {
+  string userId = 1;
+  string targetId = 2;
+}
+
+message BlockUserRequest {
+  string currentUserId = 1;
+  string userIdToBlock = 2;
+}
+
+message UnblockRequest {
+  string currentUserId = 1;
+  string userIdToUnblock = 2;
+}
+
+message GetFollowersRequest {
+  string userId = 1;
+  int32 page = 2;
+}
+
+message GetFollowingRequest {
+  string userId = 1;
+  int32 page = 2;
+}
+
+// Response messages
+message UserResponse {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string fullName = 4;
+  repeated string followers = 5;
+  repeated string following = 6;
+  repeated string blockedUsers = 7;
+}
+
+message UserListResponse {
+  repeated UserResponse users = 1;
+  int32 totalCount = 2;
+}
+
+message SearchUsersResponse {
+  repeated UserResponse users = 1;
+  int32 totalCount = 2;
+}
+
+message FollowResponse {
+  UserResponse user = 1;
+  UserResponse targetUser = 2;
+}
