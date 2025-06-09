@@ -37,6 +37,7 @@
         "tsConfigPath": "apps/chat/tsconfig.app.json"
       }
     },
+<<<<<<< HEAD
     "database": {
       "type": "library",
       "root": "libs/database",
@@ -46,6 +47,8 @@
         "tsConfigPath": "libs/database/tsconfig.lib.json"
       }
     },
+=======
+>>>>>>> 47630ffa150628610c32d87269338cf2219ac1d9
     "interaction": {
       "type": "application",
       "root": "apps/interaction",
