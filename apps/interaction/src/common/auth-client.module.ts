@@ -1,14 +1,9 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-// import { User, UserSchema } from './schemas/user.schema';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
 @Module({
   imports: [
-    // MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ClientsModule.register([
       {
         name: 'AUTH_PACKAGE',
@@ -16,12 +11,14 @@ import { join } from 'path';
         options: {
           package: 'auth',
           protoPath: join(__dirname, '../../../proto/user.proto'),
-          url: 'localhost:50052',
+          url: 'localhost:5000',
+          loader: {
+            keepCase: true,
+          },
         },
       },
     ]),
   ],
-  controllers: [UserController],
-  providers: [UserService],
+  exports:[ClientsModule]
 })
-export class UserModule {}
+export class AuthClientModule {}

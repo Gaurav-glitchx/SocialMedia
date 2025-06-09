@@ -37,6 +37,24 @@
         "tsConfigPath": "apps/chat/tsconfig.app.json"
       }
     },
+    "database": {
+      "type": "library",
+      "root": "libs/database",
+      "entryFile": "index",
+      "sourceRoot": "libs/database/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/database/tsconfig.lib.json"
+      }
+    },
+    "interaction": {
+      "type": "application",
+      "root": "apps/interaction",
+      "entryFile": "main",
+      "sourceRoot": "apps/interaction/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/interaction/tsconfig.app.json"
+      }
+    },
     "media": {
       "type": "application",
       "root": "apps/media",
